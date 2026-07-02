@@ -1,0 +1,48 @@
+server:
+  port: 8080
+  tomcat:
+    threads:
+      max: 32
+      min-spare: 8
+    accept-count: 64
+
+# gRPC on separate port
+grpc:
+  server:
+    port: 9090
+    reflection:
+      enabled: true  # allows grpcurl / Pandora reflection
+
+# GraphQL
+spring:
+  graphql:
+    graphiql:
+      enabled: true          # http://localhost:8080/graphiql — удобно для ручной отладки
+    path: /graphql
+  mvc:
+    async:
+      request-timeout: 30000
+
+# Actuator + Prometheus
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      slo:
+        http.server.requests: 10ms,25ms,50ms,100ms,250ms,500ms,1s,2s,5s
+
+logging:
+  level:
+    com.workshop: INFO
+    io.grpc: WARN

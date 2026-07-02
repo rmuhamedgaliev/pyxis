@@ -1,0 +1,3 @@
+{"tag":"oom-allocate-32mb","method":"GET","uri":"/debug/oom/allocate?mb=32","host":"127.0.0.1","headers":{"Accept":"application/json","User-Agent":"Pandora oom/jsonline"}}
+{"tag":"oom-allocate-64mb","method":"GET","uri":"/debug/oom/allocate?mb=64","host":"127.0.0.1","headers":{"Accept":"application/json","User-Agent":"Pandora oom/jsonline"}}
+{"tag":"oom-allocate-96mb","method":"GET","uri":"/debug/oom/allocate?mb=96","host":"127.0.0.1","headers":{"Accept":"application/json","User-Agent":"Pandora oom/jsonline"}}

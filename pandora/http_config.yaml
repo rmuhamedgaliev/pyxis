@@ -1,0 +1,46 @@
+# =============================================================================
+# Pandora Config: HTTP Scenario
+# Запуск: ./pandora http_config.yaml
+# =============================================================================
+
+pools:
+  - id: http-scenario-pool
+    gun:
+      type: http/scenario
+      target: 127.0.0.1:8080
+    ammo:
+      type: http/scenario
+      file: scenarios/http_scenario.hcl
+
+    result:
+      type: phout
+      destination: ./results/http_phout.log
+
+    discard_overflow: true
+
+    # Профиль нагрузки: разгон + стабильная нагрузка
+    rps:
+      - type: line        # Разгон: 1 → 50 RPS за 1 минуту
+        from: 1
+        to: 50
+        duration: 60s
+      - type: const       # Стабильная нагрузка: 50 RPS × 3 минуты
+        ops: 50
+        duration: 180s
+      - type: line        # Ищем предел: 50 → 200 RPS за 2 минуты
+        from: 50
+        to: 200
+        duration: 120s
+
+    # Сколько параллельных "пользователей" стартует
+    startup:
+      type: once
+      times: 50
+
+log:
+  level: info
+
+monitoring:
+  expvar:
+    enabled: true
+    port: 1234

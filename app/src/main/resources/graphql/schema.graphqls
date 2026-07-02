@@ -1,0 +1,33 @@
+type Query {
+    products(search: String, category: String, limit: Int): [Product!]!
+    product(id: ID!): Product
+    orders(userId: String!, limit: Int): [Order!]!
+    order(id: ID!): Order
+}
+
+type Mutation {
+    login(login: String!, password: String!): AuthPayload!
+    createOrder(token: String!, productId: String!, quantity: Int): Order!
+}
+
+type Product {
+    id: ID!
+    name: String!
+    category: String!
+    price: Float!
+    stock: Int!
+}
+
+type Order {
+    id: ID!
+    userId: String!
+    productId: String!
+    quantity: Int!
+    status: String!
+    total: Float!
+}
+
+type AuthPayload {
+    token: String!
+    userId: String!
+}

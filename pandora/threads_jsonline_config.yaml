@@ -1,0 +1,41 @@
+# =============================================================================
+# Pandora Config: intentionally saturate limited Tomcat HTTP thread pool
+# Calls /debug/threads/block and keeps servlet threads busy.
+# Запуск: pandora threads_jsonline_config.yaml
+# =============================================================================
+
+pools:
+  - id: threads-jsonline-pool
+    gun:
+      type: http
+      target: 127.0.0.1:8080
+    ammo:
+      type: http/json
+      file: ammo/threads_jsonline.jsonl
+
+    result:
+      type: phout
+      destination: ./results/threads_jsonline_phout.log
+
+    discard_overflow: true
+
+    rps:
+      - type: line
+        from: 1
+        to: 80
+        duration: 30s
+      - type: const
+        ops: 80
+        duration: 60s
+
+    startup:
+      type: once
+      times: 120
+
+log:
+  level: info
+
+monitoring:
+  expvar:
+    enabled: true
+    port: 1248

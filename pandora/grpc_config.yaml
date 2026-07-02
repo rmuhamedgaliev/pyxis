@@ -1,0 +1,42 @@
+# =============================================================================
+# Pandora Config: gRPC Scenario
+# Запуск: ./pandora grpc_config.yaml
+# =============================================================================
+
+pools:
+  - id: grpc-scenario-pool
+    gun:
+      type: grpc/scenario
+      target: 127.0.0.1:9090
+      tls: false
+
+    ammo:
+      type: grpc/scenario
+      file: scenarios/grpc_scenario.hcl
+
+    result:
+      type: phout
+      destination: ./results/grpc_phout.log
+
+    discard_overflow: true
+
+    rps:
+      - type: line
+        from: 1
+        to: 30
+        duration: 60s
+      - type: const
+        ops: 30
+        duration: 120s
+
+    startup:
+      type: once
+      times: 30
+
+log:
+  level: info
+
+monitoring:
+  expvar:
+    enabled: true
+    port: 1235

@@ -1,0 +1,4 @@
+{"tag":"ping","method":"GET","uri":"/ping","host":"127.0.0.1","headers":{"Accept":"application/json","User-Agent":"Pandora http/jsonline"}}
+{"tag":"products-list","method":"GET","uri":"/api/v1/products?limit=10","host":"127.0.0.1","headers":{"Accept":"application/json","User-Agent":"Pandora http/jsonline"}}
+{"tag":"products-search-books","method":"GET","uri":"/api/v1/products?category=books&limit=10","host":"127.0.0.1","headers":{"Accept":"application/json","User-Agent":"Pandora http/jsonline"}}
+{"tag":"product-by-id","method":"GET","uri":"/api/v1/products/prod-1","host":"127.0.0.1","headers":{"Accept":"application/json","User-Agent":"Pandora http/jsonline"}}

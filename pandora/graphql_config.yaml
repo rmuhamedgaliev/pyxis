@@ -1,0 +1,41 @@
+# =============================================================================
+# Pandora Config: GraphQL Scenario (HTTP под капотом)
+# Запуск: ./pandora graphql_config.yaml
+# =============================================================================
+
+pools:
+  - id: graphql-pool
+    gun:
+      type: http/scenario
+      target: 127.0.0.1:8080
+
+    ammo:
+      type: http/scenario
+      file: scenarios/graphql_scenario.hcl
+
+    result:
+      type: phout
+      destination: ./results/graphql_phout.log
+
+    discard_overflow: true
+
+    rps:
+      - type: line
+        from: 1
+        to: 40
+        duration: 60s
+      - type: const
+        ops: 40
+        duration: 120s
+
+    startup:
+      type: once
+      times: 40
+
+log:
+  level: info
+
+monitoring:
+  expvar:
+    enabled: true
+    port: 1236

@@ -1,0 +1,4 @@
+{"tag":"grpc-login","call":"order.AuthService.Login","metadata":{},"payload":{"login":"jsonline-user","password":"password"}}
+{"tag":"grpc-create-order","call":"order.OrderService.CreateOrder","metadata":{},"payload":{"user_id":"jsonline-user","product_id":"prod-1","quantity":1}}
+{"tag":"grpc-create-order-2","call":"order.OrderService.CreateOrder","metadata":{},"payload":{"user_id":"jsonline-user","product_id":"prod-2","quantity":2}}
+{"tag":"grpc-list-orders","call":"order.OrderService.ListOrders","metadata":{},"payload":{"user_id":"jsonline-user","limit":10}}

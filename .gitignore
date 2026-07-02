@@ -1,0 +1,24 @@
+# Gradle артефакты
+**/.gradle/
+**/build/
+**/target/
+
+# Временные/генерационные файлы
+**/.factorypath
+**/bin/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+pandora/results/
+app/heap-dumps/
+app/crash-dumps/
+AGENTS.md

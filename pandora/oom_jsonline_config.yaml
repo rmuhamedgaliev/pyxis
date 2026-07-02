@@ -1,0 +1,41 @@
+# =============================================================================
+# Pandora Config: intentionally dangerous OOM jsonline ammo
+# This profile calls /debug/oom/allocate and retains heap until JVM OOM.
+# Запуск: pandora oom_jsonline_config.yaml
+# =============================================================================
+
+pools:
+  - id: oom-jsonline-pool
+    gun:
+      type: http
+      target: 127.0.0.1:8080
+    ammo:
+      type: http/json
+      file: ammo/oom_jsonline.jsonl
+
+    result:
+      type: phout
+      destination: ./results/oom_jsonline_phout.log
+
+    discard_overflow: true
+
+    rps:
+      - type: line
+        from: 1
+        to: 30
+        duration: 30s
+      - type: const
+        ops: 30
+        duration: 60s
+
+    startup:
+      type: once
+      times: 80
+
+log:
+  level: info
+
+monitoring:
+  expvar:
+    enabled: true
+    port: 1247

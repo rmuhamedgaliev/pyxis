@@ -1,0 +1,41 @@
+# =============================================================================
+# Pandora Config: GraphQL jsonline ammo without scenario HCL
+# GraphQL uses HTTP POST /graphql under the hood.
+# Запуск: pandora graphql_jsonline_config.yaml
+# =============================================================================
+
+pools:
+  - id: graphql-jsonline-pool
+    gun:
+      type: http
+      target: 127.0.0.1:8080
+    ammo:
+      type: http/json
+      file: ammo/graphql_jsonline.jsonl
+
+    result:
+      type: phout
+      destination: ./results/graphql_jsonline_phout.log
+
+    discard_overflow: true
+
+    rps:
+      - type: line
+        from: 1
+        to: 40
+        duration: 60s
+      - type: const
+        ops: 40
+        duration: 120s
+
+    startup:
+      type: once
+      times: 40
+
+log:
+  level: info
+
+monitoring:
+  expvar:
+    enabled: true
+    port: 1245

@@ -1,0 +1,42 @@
+# =============================================================================
+# Pandora Config: gRPC jsonline ammo without scenario HCL
+# Запуск: pandora grpc_jsonline_config.yaml
+# =============================================================================
+
+pools:
+  - id: grpc-jsonline-pool
+    gun:
+      type: grpc
+      target: 127.0.0.1:9090
+      tls: false
+
+    ammo:
+      type: grpc/json
+      file: ammo/grpc_jsonline.jsonl
+
+    result:
+      type: phout
+      destination: ./results/grpc_jsonline_phout.log
+
+    discard_overflow: true
+
+    rps:
+      - type: line
+        from: 1
+        to: 30
+        duration: 60s
+      - type: const
+        ops: 30
+        duration: 120s
+
+    startup:
+      type: once
+      times: 30
+
+log:
+  level: info
+
+monitoring:
+  expvar:
+    enabled: true
+    port: 1246

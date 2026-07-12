@@ -23,6 +23,18 @@
   "liveNow": false,
   "panels": [
     {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 10,
+      "title": "HTTP",
+      "type": "row"
+    },
+    {
       "datasource": {
         "type": "prometheus",
         "uid": "Prometheus"
@@ -80,7 +92,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 1,
       "options": {
@@ -102,7 +114,7 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.50, sum by (le) (rate(http_server_requests_seconds_bucket{job=\"pandora-target-app\", uri!=\"/actuator/prometheus\"}[1m])))",
+          "expr": "histogram_quantile(0.50,  sum by (le) (rate(http_server_requests_seconds_bucket{job=\"pandora-target-app\", uri!=\"/actuator/prometheus\", uri!=\"/graphql\"}[1m])))",
           "legendFormat": "p50",
           "range": true,
           "refId": "A"
@@ -113,7 +125,7 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(http_server_requests_seconds_bucket{job=\"pandora-target-app\", uri!=\"/actuator/prometheus\"}[1m])))",
+          "expr": "histogram_quantile(0.95,  sum by (le) (rate(http_server_requests_seconds_bucket{job=\"pandora-target-app\", uri!=\"/actuator/prometheus\", uri!=\"/graphql\"}[1m])))",
           "legendFormat": "p95",
           "range": true,
           "refId": "B"
@@ -124,7 +136,7 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.99, sum by (le) (rate(http_server_requests_seconds_bucket{job=\"pandora-target-app\", uri!=\"/actuator/prometheus\"}[1m])))",
+          "expr": "histogram_quantile(0.99,  sum by (le) (rate(http_server_requests_seconds_bucket{job=\"pandora-target-app\", uri!=\"/actuator/prometheus\", uri!=\"/graphql\"}[1m])))",
           "legendFormat": "p99",
           "range": true,
           "refId": "C"
@@ -135,13 +147,13 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.999, sum by (le) (rate(http_server_requests_seconds_bucket{job=\"pandora-target-app\", uri!=\"/actuator/prometheus\"}[1m])))",
+          "expr": "histogram_quantile(0.999, sum by (le) (rate(http_server_requests_seconds_bucket{job=\"pandora-target-app\", uri!=\"/actuator/prometheus\", uri!=\"/graphql\"}[1m])))",
           "legendFormat": "p99.9",
           "range": true,
           "refId": "D"
         }
       ],
-      "title": "HTTP latency percentiles",
+      "title": "HTTP Latency",
       "type": "timeseries"
     },
     {
@@ -202,7 +214,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 0
+        "y": 1
       },
       "id": 2,
       "options": {
@@ -224,7 +236,7 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(http_server_requests_seconds_count{job=\"pandora-target-app\", uri!=\"/actuator/prometheus\"}[1m]))",
+          "expr": "sum(rate(http_server_requests_seconds_count{job=\"pandora-target-app\", uri!=\"/actuator/prometheus\", uri!=\"/graphql\"}[1m]))",
           "legendFormat": "RPS",
           "range": true,
           "refId": "A"
@@ -291,9 +303,9 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 0
+        "y": 1
       },
-      "id": 8,
+      "id": 3,
       "options": {
         "legend": {
           "calcs": [],
@@ -313,14 +325,98 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(http_server_requests_seconds_count{job=\"pandora-target-app\", status=~\"5..\"}[1m])) / clamp_min(sum(rate(http_server_requests_seconds_count{job=\"pandora-target-app\", uri!=\"/actuator/prometheus\"}[1m])), 0.001)",
+          "expr": "sum(rate(http_server_requests_seconds_count{job=\"pandora-target-app\", uri!=\"/actuator/prometheus\", uri!=\"/graphql\", status=~\"5..\"}[1m])) / clamp_min(sum(rate(http_server_requests_seconds_count{job=\"pandora-target-app\", uri!=\"/actuator/prometheus\", uri!=\"/graphql\"}[1m])), 0.001)",
           "legendFormat": "5xx",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "HTTP error rate",
+      "title": "HTTP Error Rate",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "Loki"
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 4,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "Loki"
+          },
+          "editorMode": "code",
+          "expr": "{service=\"pandora-target-app\"} |= \"event=access\" | logfmt | method != \"GRPC\" | route != \"/graphql\"",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "format": "logfmt",
+            "replace": true,
+            "source": "Line"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Line": true,
+              "event": true,
+              "id": true,
+              "labels": true,
+              "tsNs": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "route": 1,
+              "method": 2,
+              "code": 3,
+              "request_id": 4,
+              "duration_ms": 5
+            },
+            "renameByName": {
+              "request_id": "X-Request-Id"
+            }
+          }
+        }
+      ],
+      "title": "Access Logs",
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "id": 11,
+      "title": "JVM",
+      "type": "row"
     },
     {
       "datasource": {
@@ -380,9 +476,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 8
+        "y": 20
       },
-      "id": 3,
+      "id": 5,
       "options": {
         "legend": {
           "calcs": [],
@@ -419,7 +515,7 @@
           "refId": "B"
         }
       ],
-      "title": "JVM heap used vs max",
+      "title": "JVM Heap used vs max",
       "type": "timeseries"
     },
     {
@@ -493,9 +589,9 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 8
+        "y": 20
       },
-      "id": 4,
+      "id": 6,
       "options": {
         "legend": {
           "calcs": [],
@@ -532,7 +628,7 @@
           "refId": "B"
         }
       ],
-      "title": "GC pause and overhead",
+      "title": "GC Pause and Overhead",
       "type": "timeseries"
     },
     {
@@ -593,9 +689,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 28
       },
-      "id": 5,
+      "id": 7,
       "options": {
         "legend": {
           "calcs": [],
@@ -648,32 +744,10 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "app_protocol_threads{job=\"pandora-target-app\", protocol=\"http\", state=\"runnable\"}",
-          "legendFormat": "HTTP runnable",
-          "range": true,
-          "refId": "D"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Prometheus"
-          },
-          "editorMode": "code",
-          "expr": "app_protocol_threads{job=\"pandora-target-app\", protocol=\"http\", state=\"waiting\"}",
-          "legendFormat": "HTTP waiting",
-          "range": true,
-          "refId": "G"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Prometheus"
-          },
-          "editorMode": "code",
           "expr": "app_protocol_threads{job=\"pandora-target-app\", protocol=\"http\", state=\"blocked\"}",
           "legendFormat": "HTTP blocked",
           "range": true,
-          "refId": "H"
+          "refId": "D"
         },
         {
           "datasource": {
@@ -685,20 +759,9 @@
           "legendFormat": "gRPC live",
           "range": true,
           "refId": "E"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Prometheus"
-          },
-          "editorMode": "code",
-          "expr": "app_protocol_threads{job=\"pandora-target-app\", protocol=\"grpc\", state=\"runnable\"}",
-          "legendFormat": "gRPC runnable",
-          "range": true,
-          "refId": "F"
         }
       ],
-      "title": "HTTP, gRPC and JVM threads",
+      "title": "HTTP, gRPC and JVM Threads",
       "type": "timeseries"
     },
     {
@@ -772,9 +835,9 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 16
+        "y": 28
       },
-      "id": 6,
+      "id": 8,
       "options": {
         "legend": {
           "calcs": [],
@@ -833,88 +896,15 @@
           "refId": "D"
         }
       ],
-      "title": "CPU and file descriptors",
+      "title": "CPU and File Descriptors",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "Loki"
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 24,
-        "x": 0,
-        "y": 24
-      },
-      "id": 7,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": true
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "Loki"
-          },
-          "editorMode": "code",
-          "expr": "{service=\"pandora-target-app\"} |= \"event=access\" | logfmt",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "transformations": [
-        {
-          "id": "extractFields",
-          "options": {
-            "format": "logfmt",
-            "replace": true,
-            "source": "Line"
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Line": true,
-              "event": true,
-              "id": true,
-              "labels": true,
-              "tsNs": true
-            },
-            "indexByName": {
-              "Time": 0,
-              "route": 1,
-              "method": 2,
-              "code": 3,
-              "request_id": 4
-            },
-            "renameByName": {
-              "request_id": "X-Request-Id"
-            }
-          }
-        }
-      ],
-      "title": "HTTP access logs",
-      "type": "table"
     }
   ],
   "refresh": "5s",
   "schemaVersion": 39,
   "tags": [
-    "spring",
-    "actuator",
-    "jvm",
-    "loki"
+    "http",
+    "pandora"
   ],
   "templating": {
     "list": []
@@ -925,8 +915,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Pandora Target App",
-  "uid": "pandora-target-app",
-  "version": 2,
+  "title": "HTTP",
+  "uid": "pandora-http",
+  "version": 1,
   "weekStart": ""
 }

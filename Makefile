@@ -8,6 +8,8 @@ GRADLE_USER_HOME := $(CURDIR)/$(APP_DIR)/.gradle
 PANDORA ?= pandora
 DURATION ?= 25s
 
+DOCKER_COMPOSE := $(shell if docker compose version >/dev/null 2>&1; then echo "docker compose"; elif command -v docker-compose >/dev/null 2>&1; then echo "docker-compose"; else echo "docker compose"; fi)
+
 .DEFAULT_GOAL := help
 
 .PHONY: help
@@ -59,27 +61,27 @@ run-local:
 
 .PHONY: up
 up: crash-dumps
-	docker compose up -d --build
+	$(DOCKER_COMPOSE) up -d --build
 
 .PHONY: down
 down:
-	docker compose down
+	$(DOCKER_COMPOSE) down
 
 .PHONY: restart
 restart: crash-dumps
-	docker compose up -d --build
+	$(DOCKER_COMPOSE) up -d --build
 
 .PHONY: ps
 ps:
-	docker compose ps
+	$(DOCKER_COMPOSE) ps
 
 .PHONY: logs
 logs:
-	docker compose logs -f
+	$(DOCKER_COMPOSE) logs -f
 
 .PHONY: logs-app
 logs-app:
-	docker compose logs -f app
+	$(DOCKER_COMPOSE) logs -f app
 
 .PHONY: health
 health:

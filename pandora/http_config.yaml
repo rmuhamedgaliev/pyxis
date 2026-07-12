@@ -20,17 +20,17 @@ pools:
 
     # Профиль нагрузки: разгон + стабильная нагрузка
     rps:
-      - type: line        # Разгон: 1 → 50 RPS за 1 минуту
+      - type: line        # Разгон: 1 → 50 RPS за 30 секунд
         from: 1
         to: 50
-        duration: 60s
-      - type: const       # Стабильная нагрузка: 50 RPS × 3 минуты
+        duration: 30s
+      - type: const       # Стабильная нагрузка: 50 RPS × 90 секунд
         ops: 50
-        duration: 180s
-      - type: line        # Ищем предел: 50 → 200 RPS за 2 минуты
+        duration: 90s
+      - type: line        # Ищем предел: 50 → 200 RPS за 60 секунд
         from: 50
         to: 200
-        duration: 120s
+        duration: 60s
 
     # Сколько параллельных "пользователей" стартует
     startup:

@@ -22,10 +22,10 @@ pools:
       - type: line
         from: 1
         to: 50
-        duration: 60s
+        duration: 30s
       - type: const
         ops: 50
-        duration: 120s
+        duration: 60s
 
     startup:
       type: once

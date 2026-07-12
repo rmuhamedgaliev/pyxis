@@ -31,7 +31,7 @@ services:
         condition: service_healthy
 
   loki:
-    image: grafana/loki:2.9.8
+    image: grafana/loki:3.5.0
     container_name: pandora-loki
     command: -config.file=/etc/loki/local-config.yaml
     ports:
@@ -41,7 +41,7 @@ services:
       - loki-data:/loki
 
   promtail:
-    image: grafana/promtail:2.9.8
+    image: grafana/promtail:3.5.0
     container_name: pandora-promtail
     command: -config.file=/etc/promtail/config.yml
     volumes:

@@ -7,6 +7,8 @@ CRASH_DUMP_DIR := $(APP_DIR)/crash-dumps
 GRADLE_USER_HOME := $(CURDIR)/$(APP_DIR)/.gradle
 PANDORA ?= pandora
 DURATION ?= 25s
+PHOUT_FILE ?=
+PHOUT_OUT ?= $(PANDORA_RESULTS_DIR)/charts
 
 DOCKER_COMPOSE := $(shell if docker compose version >/dev/null 2>&1; then echo "docker compose"; elif command -v docker-compose >/dev/null 2>&1; then echo "docker-compose"; else echo "docker compose"; fi)
 
@@ -50,6 +52,7 @@ help:
 	@printf "  %-18s %s\n" "clean-phout" "Remove Pandora phout logs"
 	@printf "  %-18s %s\n" "clean-crash-dumps" "Remove JVM crash dumps"
 	@printf "  %-18s %s\n" "clean-heap-dumps" "Alias for clean-crash-dumps"
+	@printf "  %-18s %s\n" "phout" "Visualize phout log(s). PHOUT_FILE=path or all results/*.log. PHOUT_OUT=dir (default: results/charts)"
 
 .PHONY: build
 build:
@@ -201,3 +204,13 @@ clean-crash-dumps: crash-dumps
 
 .PHONY: clean-heap-dumps
 clean-heap-dumps: clean-crash-dumps
+
+.PHONY: phout
+phout:
+	rm -rf $(PHOUT_OUT)
+	@if [ -n "$(PHOUT_FILE)" ]; then \
+		cd $(PANDORA_DIR) && uv run python visualize_phout.py ../$(PHOUT_FILE) -o ../$(PHOUT_OUT); \
+	else \
+		cd $(PANDORA_DIR) && uv run python visualize_phout.py results/*_phout.log -o ../$(PHOUT_OUT); \
+	fi
+	@printf "Charts saved to: %s\n" "$(PHOUT_OUT)"

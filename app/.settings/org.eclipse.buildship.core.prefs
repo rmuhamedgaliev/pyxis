@@ -1,11 +1,11 @@
-arguments=--init-script /home/rmuhamedgaliev/.cache/opencode/bin/jdtls/config_linux/org.eclipse.osgi/57/0/.cp/gradle/init/init.gradle
+arguments=--init-script /Users/muhamedgaliev/.serena/language_servers/static/EclipseJDTLS/workspaces/9ed1b774120139a78cd24bb88146b58e/config_path/org.eclipse.osgi/59/0/.cp/gradle/init/init.gradle --init-script /Users/muhamedgaliev/.serena/language_servers/static/EclipseJDTLS/workspaces/9ed1b774120139a78cd24bb88146b58e/config_path/org.eclipse.osgi/59/0/.cp/gradle/protobuf/init.gradle --init-script /Users/muhamedgaliev/.serena/language_servers/static/EclipseJDTLS/workspaces/9ed1b774120139a78cd24bb88146b58e/config_path/org.eclipse.osgi/59/0/.cp/gradle/android/init.gradle
 auto.sync=false
 build.scans.enabled=false
-connection.gradle.distribution=GRADLE_DISTRIBUTION(WRAPPER)
+connection.gradle.distribution=GRADLE_DISTRIBUTION(LOCAL_INSTALLATION(/Users/muhamedgaliev/.serena/language_servers/static/EclipseJDTLS/gradle-8.14.2))
 connection.project.dir=
 eclipse.preferences.version=1
-gradle.user.home=
-java.home=/home/rmuhamedgaliev/.sdkman/candidates/java/25.0.2-oracle
+gradle.user.home=/Users/muhamedgaliev/.gradle
+java.home=/Users/muhamedgaliev/.serena/language_servers/static/EclipseJDTLS/vscode-java-1.54.0-923/extension/jre/21.0.10-macosx-aarch64
 jvm.arguments=
 offline.mode=false
 override.workspace.settings=true

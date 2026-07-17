@@ -21,4 +21,13 @@ Thumbs.db
 pandora/results/
 app/heap-dumps/
 app/crash-dumps/
+
+# Python / uv
+pandora/.venv/
+pandora/__pycache__/
+pandora/*.pyc
 AGENTS.md
+
+.serena/
+app/.settings/org.eclipse.jdt.apt.core.prefs
+app/.settings/org.eclipse.jdt.core.prefs

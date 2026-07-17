@@ -185,6 +185,30 @@ pandora/results/
 make clean-phout
 ```
 
+### Визуализация phout-логов
+
+Требования: `uv` в `PATH`.
+
+```bash
+# Все phout-файлы из pandora/results/
+make phout
+
+# Конкретный файл
+make phout PHOUT_FILE=pandora/results/http_phout.log
+
+# Своя папка для вывода
+make phout PHOUT_OUT=pandora/results/charts
+```
+
+Графики сохраняются в `pandora/results/charts/` (по одному PNG на файл):
+
+- RPS по времени
+- Response time p50/p95/p99 по времени
+- Error rate по времени
+- Гистограмма распределения времени ответа
+- Перцентили по сценариям
+- Распределение статус-кодов
+
 ## Stress Examples
 
 ### Thread Pool Saturation
